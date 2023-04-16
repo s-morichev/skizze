@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "skizze"
+version = "0.1.0"
+description = ""
+authors = ["Sergey Morichev <s.morichev@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.95.1"
+sqlalchemy = "^2.0.9"
+asyncpg = "^0.27.0"
+uvicorn = "^0.21.1"
+redis = "^4.5.4"
+gunicorn = "^20.1.0"
+orjson = "^3.8.10"
+alembic = "^1.10.3"
+email-validator = "^2.0.0"
+backoff = "^2.2.1"
+
+
+[tool.poetry.group.dev.dependencies]
+wemake-python-styleguide = "^0.17.0"
+mypy = "^1.2.0"
+pytest = "^7.3.1"
+coverage = "^7.2.3"
+black = "^23.3.0"
+
+[tool.black]
+line-length = 80
+target-version = ["py311"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
