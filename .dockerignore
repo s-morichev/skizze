@@ -1,0 +1,16 @@
+**/.git
+**/.gitignore
+**/.dockerignore
+**/.vscode
+**/.idea
+**/coverage
+**/venv
+**/env
+**/.env
+**/.aws
+**/.ssh
+**/*.md
+**/*.pyc
+**/*.pyo
+**/__pycache__/
+docker/Dockerfile

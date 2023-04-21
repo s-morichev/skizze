@@ -1,0 +1,31 @@
+services:
+  backend:
+    restart: "always"
+    image: skizze-backend
+    container_name: skizze_backend
+    env_file:
+      - .env
+    depends_on:
+      - backend_postgres
+
+  backend_postgres:
+    image: postgres:15.1-alpine
+    container_name: skizze_backend_postgres
+    volumes:
+      - skizze_backend_postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${BACKEND_PG_USER}
+      - POSTGRES_PASSWORD=${BACKEND_PG_PASSWORD}
+      - POSTGRES_DB=${BACKEND_PG_DB_NAME}
+
+  backend_redis:
+    image: redis:7.0.9-alpine
+    container_name: skizze_backend_redis
+    command: redis-server --save 20 1 --aclfile /etc/redis.acl
+    volumes:
+      - ./redis.acl:/etc/redis.acl
+      - skizze_backend_redis_data:/data
+
+volumes:
+  skizze_backend_postgres_data:
+  skizze_backend_redis_data:

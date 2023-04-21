@@ -1,0 +1,20 @@
+services:
+  backend:
+    restart: "no"
+    build:
+      target: development
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    container_name: skizze_backend
+    volumes:
+      - ./app/:/opt/app/app/
+    ports:
+      - "8000:8000"
+
+  backend_postgres:
+    ports:
+      - "${BACKEND_PG_PORT}:5432"
+
+  backend_redis:
+    ports:
+      - "${BACKEND_REDIS_PORT}:6379"
