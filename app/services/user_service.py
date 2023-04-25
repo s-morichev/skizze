@@ -55,8 +55,7 @@ class UserService(CRUDBase[User, UserCreate, UserUpdate]):
         self, session: AsyncSession, *, email: str
     ) -> User | None:
         stmt = select(User).filter(User.email == email)
-        db_result = await session.execute(stmt)
-        return db_result.scalar_one_or_none()
+        return (await session.scalars(stmt)).one_or_none()
 
     async def authenticate(
         self, session: AsyncSession, *, email: str, password: str

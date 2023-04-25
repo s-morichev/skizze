@@ -1,8 +1,9 @@
 from collections.abc import Sequence
 from typing import Any, Generic, TypeVar
+from uuid import UUID
 
 from fastapi.encoders import jsonable_encoder
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.base_class import Base
@@ -27,19 +28,17 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         await session.refresh(db_obj)
         return db_obj
 
-    async def read(self, session: AsyncSession, id_: Any) -> ModelType | None:
-        db_result = await session.execute(
-            select(self.model).filter(self.model.id == id_)
-        )
-        return db_result.scalar_one_or_none()
+    async def read(
+        self, session: AsyncSession, id_: int | UUID
+    ) -> ModelType | None:
+        stmt = select(self.model).filter(self.model.id == id_)
+        return (await session.scalars(stmt)).one_or_none()
 
     async def read_multi(
         self, session: AsyncSession, *, skip: int = 0, limit: int = 100
     ) -> Sequence[ModelType]:
-        db_result = await session.execute(
-            select(self.model).offset(skip).limit(limit)
-        )
-        return db_result.scalars().all()
+        stmt = select(self.model).offset(skip).limit(limit)
+        return (await session.scalars(stmt)).all()
 
     async def update(
         self,
@@ -61,12 +60,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db_obj
 
     async def delete(
-        self, session: AsyncSession, *, id_: int
+        self, session: AsyncSession, *, id_: int | UUID
     ) -> ModelType | None:
-        db_result = await session.execute(
-            select(self.model).where(self.model.id == id_)
-        )
-        db_obj = db_result.scalar_one_or_none()
-        await session.delete(db_obj)
+        stmt = delete(self.model).where(self.model.id == id_)
         await session.commit()
-        return db_obj
+        return (await session.scalars(stmt)).one_or_none()

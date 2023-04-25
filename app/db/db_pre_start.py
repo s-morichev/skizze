@@ -47,9 +47,8 @@ async def insert_roles(session: AsyncSession) -> None:
 
 
 async def create_admin(session: AsyncSession) -> None:
-    admin_role = (
-        await session.execute(select(Role).where(Role.name == "Administrator"))
-    ).scalar_one()
+    stmt = select(Role).where(Role.name == "Administrator")
+    admin_role = (await session.scalars(stmt)).one()
 
     admin_create = UserCreate(
         email=settings.admin_email,

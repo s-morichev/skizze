@@ -9,4 +9,4 @@ class Token(BaseSchema):
 
 
 class TokenPayload(BaseSchema):
-    sub: UUID | None = None
+    sub: UUID
